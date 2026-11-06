@@ -1,5 +1,7 @@
 # Maximal Shell
 
+![Maximal Shell desktop](assets/desktop-digital.webp)
+
 A maximalist, music-focused **Hyprland** rice with a fully custom **Quickshell** desktop shell —
 everything animated, everything themed from your wallpaper (or the album art of what's playing),
 and the whole desktop reacting to music.
@@ -16,6 +18,25 @@ and the whole desktop reacting to music.
   window overview; screenshot / recording / colour-picker flyouts (OCR, annotate, inline video preview);
   timers & pomodoro in the bar; audio dropdown with per-app volume; control center; keybind cheatsheet
   (Super + /); game / zen modes; screen shaders (night light, vibrance, CRT…).
+
+## Showcase
+
+| Clock morph — digits wrap into an analog dial | Wallpaper → everything re-themes |
+|:---:|:---:|
+| ![clock morph](assets/clock-morph.webp) | ![re-theme](assets/retheme.webp) |
+
+![launcher: calculator, commands and the live-preview wallpaper grid](assets/launcher.webp)
+
+| | |
+|:---:|:---:|
+| ![analog desktop](assets/desktop-analog.webp) **Analog clock** (audio-reactive tick ring) + now-playing card with synced lyrics | ![music stage](assets/stage.webp) **Music Stage** — blurred cover, radial spectrum, scrolling lyrics |
+| ![dashboard](assets/dashboard.webp) **Dashboard** — weather, media vinyl with radial visualiser, calendar, system graphs | ![control center](assets/control.webp) **Control center** — toggles, sliders, music intensity + moods |
+| ![launcher](assets/launcher-apps.webp) **Launcher** — fuzzy apps with frecency | ![commands](assets/launcher-commands.webp) **`>` commands** |
+| ![wallpaper grid](assets/launcher-wallpapers.webp) **`>wallpaper`** — live-preview grid | ![wallpapers](assets/wallpapers.webp) **Wallpaper picker** — cover-flow + palette styles |
+| ![windows](assets/windows.webp) **Windows** — spinning gradient borders, themed foot + Dolphin | ![overview](assets/overview.webp) **Overview** — live previews, drag between workspaces |
+| ![switcher](assets/switcher.webp) **Alt+Tab switcher** — most-recently-used, live previews | ![audio](assets/audio-dropdown.webp) **Audio dropdown** — devices + per-app volume with live meters |
+| ![cheatsheet](assets/cheatsheet.webp) **Keybind cheatsheet** (Super + /) — generated from Hyprland | ![power](assets/power.webp) **Power menu** |
+| ![flyout](assets/flyout-and-timer.webp) **Capture flyout** + **timer** in the bar | ![workspace osd](assets/workspace-osd.webp) **Workspace OSD** |
 
 ## Install
 ```sh
