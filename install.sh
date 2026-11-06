@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Maximal Shell installer. Expects this repo at ~/.config/hypr/rices/maximal
-#   git clone https://github.com/<you>/maximal-shell ~/.config/hypr/rices/maximal && ~/.config/hypr/rices/maximal/install.sh
+#   git clone https://github.com/GGcoder11mf/maximal-shell ~/.config/hypr/rices/maximal && ~/.config/hypr/rices/maximal/install.sh
 set -e
 R="$HOME/.config/hypr/rices/maximal"
 [ "$(cd "$(dirname "$0")" && pwd)" = "$R" ] || { echo "Clone this repo to $R first." >&2; exit 1; }

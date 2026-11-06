@@ -40,7 +40,7 @@ and the whole desktop reacting to music.
 
 ## Install
 ```sh
-git clone https://github.com/<you>/maximal-shell ~/.config/hypr/rices/maximal
+git clone https://github.com/GGcoder11mf/maximal-shell ~/.config/hypr/rices/maximal
 ~/.config/hypr/rices/maximal/install.sh
 ```
 `install.sh` checks dependencies, installs the `rice` switcher, hooks the rice into
