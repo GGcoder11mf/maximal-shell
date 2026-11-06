@@ -132,6 +132,7 @@ b(mod .. " + F8",             M.toggle_spin,         "Modes › Toggle spinning 
 b(mod .. " + F9",             global("reactive"),    "Modes › Audio-reactive desktop")
 b(mod .. " + F10",            global("clock"),       "Modes › Desktop clock digital ⇄ analog")
 b(mod .. " + F11",            global("stage"),       "Shell › Music Stage (full-screen now playing)")
+b(mod .. " + F12",            global("widgets"),     "Shell › Edit desktop widgets")
 b(mod .. " + ALT + L",        M.cycle_layout,        "Modes › Cycle layout (dwindle/master/scroll)")
 b(mod .. " + CTRL + G",       M.cycle_gaps(1),       "Modes › More gaps")
 b(mod .. " + CTRL + SHIFT + G", M.cycle_gaps(-1),    "Modes › Fewer gaps")

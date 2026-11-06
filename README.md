@@ -16,6 +16,10 @@ and the whole desktop reacting to music.
   intensity slider and mood profiles (auto · chill · groove · hype).
 - **Animated everything**: spring physics, spinning gradient borders, a desktop clock that *wraps its digits
   into an analog dial*, workspace OSD, staggered panels — tuned to stay smooth (see perf rules below).
+- **Desktop widgets** you place yourself: system monitor, weather, calendar, sticky note, to-do, quick apps,
+  pomodoro, now-playing — right-click the desktop to add / drag / resize / remove (layout is saved).
+- **Knows music from video**: only real music (Spotify, YouTube Music, VEVO/"Topic" uploads, local files…)
+  drives the music features — Shorts, reviews, trailers and other videos don't.
 - **Practical**: launcher with `>commands`, `=calc`, `!run`, `?web`; Alt+Tab switcher with live previews;
   window overview; screenshot / recording / colour-picker flyouts (OCR, annotate, inline video preview);
   timers & pomodoro in the bar; audio dropdown with per-app volume; control center; keybind cheatsheet
@@ -29,6 +33,10 @@ and the whole desktop reacting to music.
 
 ![launcher: calculator, commands and the live-preview wallpaper grid](assets/launcher.webp)
 
+| Desktop widgets | Edit mode — wiggle, gallery, add / move / resize / remove |
+|:---:|:---:|
+| ![widgets](assets/widgets.webp) | ![widgets edit](assets/widgets-clip.webp) |
+
 | | |
 |:---:|:---:|
 | ![analog desktop](assets/desktop-analog.webp) **Analog clock** (audio-reactive tick ring) + now-playing card with synced lyrics | ![music stage](assets/stage.webp) **Music Stage** — blurred cover, radial spectrum, scrolling lyrics |
@@ -39,6 +47,7 @@ and the whole desktop reacting to music.
 | ![switcher](assets/switcher.webp) **Alt+Tab switcher** — most-recently-used, live previews | ![audio](assets/audio-dropdown.webp) **Audio dropdown** — devices + per-app volume with live meters |
 | ![cheatsheet](assets/cheatsheet.webp) **Keybind cheatsheet** (Super + /) — generated from Hyprland | ![power](assets/power.webp) **Power menu** |
 | ![flyout](assets/flyout-and-timer.webp) **Capture flyout** + **timer** in the bar | ![workspace osd](assets/workspace-osd.webp) **Workspace OSD** |
+| ![widgets gallery](assets/widgets-edit.webp) **Widget gallery** in edit mode | ![widgets](assets/widgets.webp) **Widgets** — weather, calendar, note, to-do, pomodoro, quick apps, system |
 
 ## Install
 ```sh
@@ -64,6 +73,7 @@ ffmpeg · Qt6 Multimedia (ffmpeg backend) · fonts: Rubik, Material Symbols Roun
 | **Alt + Tab** | window switcher (live previews) |
 | **Super + Tab** | overview |
 | **Super + F11** | Music Stage |
+| **Super + F12** / right-click desktop | edit desktop widgets |
 | **Super + Shift + S** | screenshot region |
 
 ---
@@ -102,6 +112,19 @@ ffmpeg · Qt6 Multimedia (ffmpeg backend) · fonts: Rubik, Material Symbols Roun
 - **Music Stage** (`Super+F11`, `>stage`): full-screen blurred-cover scene, 96-bar radial spectrum around the
   art, scrolling lyrics, controls. Opens by itself after 150 s idle while music plays (`>autostage` to toggle).
 - Debug: `… ipc call music stats`
+
+## Desktop widgets (`shell/modules/desk/`, `services/Widgets.qml`)
+- Types: `sysmon`, `weather`, `calendar`, `notes`, `todo`, `apps`, `timer`, `nowplaying` (one `W*.qml` each,
+  registered in `DesktopWidgets.qml` + the catalogue in `Widgets.qml`).
+- Edit mode (right-click desktop · Super+F12 · `>widgets`): drag (20 px grid), −/+ scale, × remove, gallery.
+- Layout + per-widget data (note text, tasks) persist in `~/.local/state/maximal/widgets.json`.
+- Widgets live on the wallpaper layer: data refreshes every few seconds, no per-frame animation.
+- IPC: `… ipc call widgets edit|gallery|list|add <type>|move <uid> <x> <y>|remove <uid>`.
+
+## Music detection (`services/Music.qml → judge()`)
+Scores player, page URL (`xesam:url`), album tag, channel, title wording, length and lyrics; ≥ 3 = music.
+Album colours, track toast, now-playing card, lyrics, auto-stage and audio reactivity only run for music.
+`>musicfilter` turns the filter off; `… ipc call music stats` shows the score and its reasons.
 
 ## Practical extras
 - **Alt+Tab switcher** (`Switcher.qml`): live previews, most-recently-used order; hold Alt + Tab/Shift+Tab, release

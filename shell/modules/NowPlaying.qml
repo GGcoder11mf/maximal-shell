@@ -17,13 +17,16 @@ Item {
     readonly property real lv: live ? Viz.level : 0
     readonly property real bs: live ? Viz.bass : 0
     readonly property var vals: live ? Viz.values : []
-    width: 520
-    height: 300
-    readonly property bool on: Media.active
-    opacity: on ? 1 : 0
+    implicitWidth: 520
+    implicitHeight: 300
+    property int uid: -1             // when used as a desktop widget
+    readonly property bool bare: true // widget frame: no glass behind it (only in edit mode)
+    readonly property bool editing: Widgets.editMode
+    readonly property bool on: Media.active && Music.isMusic
+    opacity: on || editing ? 1 : 0
     visible: opacity > 0.01
     Behavior on opacity { Anim { duration: Theme.slow } }
-    transform: Translate { x: root.on ? 0 : 60; Behavior on x { Anim { duration: Theme.slow; easing.type: Theme.springy } } }
+    transform: Translate { x: root.on || root.editing ? 0 : 60; Behavior on x { Anim { duration: Theme.slow; easing.type: Theme.springy } } }
 
     // debug render: qs ipc call state snapshot /path.png  -> also writes /path.png.np.png
     Connections {
@@ -165,5 +168,15 @@ Item {
             id: enter
             NumberAnimation { target: ly; property: "opacity"; from: 0; to: 1; duration: Theme.normal }
         }
+    }
+
+    // edit-mode placeholder when nothing is playing
+    Column {
+        visible: !root.on
+        anchors.centerIn: parent
+        spacing: 6
+        Icon { anchors.horizontalCenter: parent.horizontalCenter; icon: "album"; size: 54; color: Qt.alpha(Theme.subtext, 0.6) }
+        Txt { anchors.horizontalCenter: parent.horizontalCenter; text: "Now playing"; font.pixelSize: 16; font.weight: Font.Black }
+        Txt { anchors.horizontalCenter: parent.horizontalCenter; text: "appears here while music plays"; font.pixelSize: 11; color: Theme.subtext }
     }
 }

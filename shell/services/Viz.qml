@@ -21,7 +21,8 @@ import Caelestia.Services
 Singleton {
     id: root
 
-    readonly property bool enabled: Shell.audioReactive && !Shell.gameMode
+    // not for a normal video/short: if a media player is playing, it must be music
+    readonly property bool enabled: Shell.audioReactive && !Shell.gameMode && (!Media.playing || Music.isMusic)
     readonly property int bars: 48
 
     // ── public: fast set (30 fps) ───────────────────────

@@ -122,7 +122,7 @@ PanelWindow {
                 Image {
                     id: thumb
                     anchors.fill: parent
-                    source: win.kind === "color" ? "" : "file://" + (win.kind === "video" ? win.poster : win.file)
+                    source: win.kind === "color" ? "" : (win.kind === "video" ? (win.poster ? "file://" + win.poster : "") : (win.file ? "file://" + win.file : ""))
                     fillMode: Image.PreserveAspectCrop
                     sourceSize.width: 760
                     asynchronous: true

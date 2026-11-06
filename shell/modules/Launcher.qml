@@ -53,6 +53,8 @@ Overlay {
         { name: "break", alias: ["rest"], icon: "local_cafe", desc: "5 min break timer", run: () => Timers.start(5 * 60, "Break") },
         { name: "stoptimer", alias: ["canceltimer"], icon: "timer_off", desc: Timers.active ? "Cancel " + Timers.label + " (" + Timers.fmt(Timers.remaining) + " left)" : "No timer running", run: () => Timers.cancel() },
         { name: "wsosd", alias: ["workspaceosd"], icon: "filter_9_plus", desc: "Big workspace number on switch " + onoff(Shell.wsOsd), run: () => { Shell.wsOsd = !Shell.wsOsd; } },
+        { name: "widgets", alias: ["widget", "desk"], icon: "widgets", desc: "Edit desktop widgets — add, move, resize, remove", run: () => { Widgets.editMode = true; } },
+        { name: "musicfilter", alias: ["onlymusic", "detect"], icon: "music_video", desc: "Only real music drives music features (not videos/shorts) " + onoff(Shell.musicFilter) + " · now: " + (Media.active ? (Music.isMusic ? "music" : "not music") : "nothing playing"), run: () => { Shell.musicFilter = !Shell.musicFilter; } },
         { name: "stage", alias: ["music", "nowplaying", "np"], icon: "theater_comedy", desc: "Music Stage — full-screen now playing, lyrics, visualiser", panel: "stage" },
         { name: "albumcolors", alias: ["albumcolours", "artcolors", "cover"], icon: "palette", desc: "Theme the rice from the album art " + onoff(Shell.albumColors), run: () => { Shell.albumColors = !Shell.albumColors; } },
         { name: "autostage", alias: ["idle"], icon: "bedtime", desc: "Open the stage when idle while music plays " + onoff(Shell.stageAuto), run: () => { Shell.stageAuto = !Shell.stageAuto; } },

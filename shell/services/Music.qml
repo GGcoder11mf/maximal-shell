@@ -24,6 +24,34 @@ Singleton {
     readonly property string key: artist + "\u0001" + title
     signal trackChanged()
 
+    // ── is this actually MUSIC? (vs. a normal video / short) ──
+    // Scores player, page URL, album tag, channel name, title wording, length and lyrics.
+    // Everything music-related (album colours, toast, card, lyrics, stage, audio reactivity) keys on isMusic.
+    readonly property string url: String(Media.player?.metadata?.["xesam:url"] ?? "")
+    readonly property var verdict: judge(Media.player?.identity ?? "", rawArtist, rawTitle, Media.album, Media.length, url, lines.length > 0)
+    readonly property bool isMusic: Media.active && (!Shell.musicFilter || verdict.score >= 3)
+    readonly property string reason: verdict.why.join(", ")
+
+    function judge(identity, artist, title, album, length, url, lyrics) {
+        let s = 0; const why = [];
+        const add = (n, w) => { s += n; why.push((n > 0 ? "+" : "") + n + " " + w); };
+        const id = identity.toLowerCase(), t = title || "", a = artist || "", u = url.toLowerCase();
+        if (/spotify|tidal|deezer|apple music|cider|amberol|rhythmbox|elisa|strawberry|lollypop|cmus|mpd|audacious|clementine|quod libet|youtube music/.test(id)) add(10, "music app");
+        if (/music\.youtube\.com|open\.spotify\.com|soundcloud\.com|bandcamp\.com|music\.apple\.com|deezer\.com|tidal\.com|music\.amazon/.test(u)) add(10, "music site");
+        if (/youtube\.com\/shorts\/|tiktok\.com|instagram\.com\/reel/.test(u)) add(-12, "short-form video");
+        if (/#shorts?\b/i.test(t)) add(-10, "#shorts");
+        if ((album || "").trim()) add(4, "album tag");
+        if (/vevo$|\s-\stopic$/i.test(a.trim())) add(5, "label channel");
+        if (/official\s+(music\s+)?(video|audio)|lyric(s| video)|visuali[sz]er|music video|\(audio\)|\bprod\.|\bremix\b|\bft\.|\bfeat\.|full album|\bost\b|\bslowed\b|\bsped up\b/i.test(t)) add(3, "music wording");
+        if (/^.+\s[-–—]\s.+$/.test(t)) add(1, "Artist - Title");
+        if (lyrics) add(3, "synced lyrics");
+        if (/\b(review|tutorial|how to|reaction|reacts|podcast|trailer|gameplay|walkthrough|unboxing|vlog|explained|news|interview|stream|highlights|vs\.?)\b/i.test(t)) add(-4, "video wording");
+        if (length >= 5 && length < 60) add(-6, "under 60 s");     // only once a real length is known
+        if (length > 900 && !(album || "").trim() && !/mix|album|playlist|lofi|lo-fi|compilation/i.test(t)) add(-2, "long, no album");
+        if (/mix|lofi|lo-fi|playlist|compilation/i.test(t)) add(2, "mix/playlist");
+        return { score: s, why };
+    }
+
     function cleanup(artist, title) {
         let a = (artist || "").trim(), t = (title || "").trim();
         // strip common video/audio decorations
@@ -39,7 +67,7 @@ Singleton {
 
     // ── lyrics ──────────────────────────────────────────
     // derived from `lines` (that binding updates reliably; Lyrics.hasLyrics did not re-notify here)
-    readonly property bool hasLyrics: lines.length > 0 && Media.active
+    readonly property bool hasLyrics: lines.length > 0 && Media.active && isMusic
     readonly property var lines: Lyrics.lyrics
     property real pos: 0                      // smooth playback position (s)
     property int lyricIndex: -1
@@ -76,7 +104,7 @@ Singleton {
             root._lastKey = root.key;
             root.lyricIndex = -1;
             Lyrics.setTrack(root.artist, root.title, Media.album, Media.length);
-            if (Media.playing) root.trackChanged();
+            if (Media.playing && root.isMusic) root.trackChanged();
             artDebounce.restart();
         }
     }
@@ -91,6 +119,7 @@ Singleton {
         onTriggered: root.applyArt()
     }
     onAlbumOnChanged: albumOn ? applyArt() : restorePalette()
+    onIsMusicChanged: { if (isMusic) artDebounce.restart(); else if (_artThemed) restoreTimer.restart(); }
     Connections {
         target: Media
         function onArtChanged() { artDebounce.restart(); }
@@ -100,7 +129,7 @@ Singleton {
         }
     }
     function applyArt() {
-        if (!Shell.albumColors || !Media.playing || !Media.art || Media.art === root._themedArt) return;
+        if (!Shell.albumColors || !Media.playing || !root.isMusic || !Media.art || Media.art === root._themedArt) return;
         root._themedArt = Media.art;
         root._artThemed = true;
         Quickshell.execDetached([Theme.scripts + "art-theme.sh", Media.art]);
@@ -120,11 +149,11 @@ Singleton {
     // ── Music Stage: auto-open when idle while music plays ──
     property bool _stageAuto: false
     IdleMonitor {
-        enabled: Shell.stageAuto && Media.playing
+        enabled: Shell.stageAuto && Media.playing && root.isMusic
         timeout: 150            // seconds without input
         respectInhibitors: false
         onIsIdleChanged: {
-            if (isIdle && Media.playing && Shell.panel === "") { root._stageAuto = true; Shell.open("stage"); }
+            if (isIdle && Media.playing && root.isMusic && Shell.panel === "") { root._stageAuto = true; Shell.open("stage"); }
             else if (!isIdle && root._stageAuto) { root._stageAuto = false; if (Shell.panel === "stage") Shell.close(); }
         }
     }
@@ -133,7 +162,7 @@ Singleton {
     IpcHandler {
         target: "music"
         function stats(): string {
-            return `hasLyrics(combined)=${root.hasLyrics} mediaActive=${Media.active} raw="${root.rawArtist} | ${root.rawTitle}" clean="${root.artist} | ${root.title}" lyrics=${Lyrics.hasLyrics} loading=${Lyrics.loading} n=${root.lines.length} idx=${root.lyricIndex} line="${root.line}" pos=${root.pos.toFixed(1)} albumThemed=${root._artThemed} playing=${Media.playing}`;
+            return `isMusic=${root.isMusic} score=${root.verdict.score} [${root.reason}] url=${root.url} | hasLyrics(combined)=${root.hasLyrics} mediaActive=${Media.active} raw="${root.rawArtist} | ${root.rawTitle}" clean="${root.artist} | ${root.title}" lyrics=${Lyrics.hasLyrics} loading=${Lyrics.loading} n=${root.lines.length} idx=${root.lyricIndex} line="${root.line}" pos=${root.pos.toFixed(1)} albumThemed=${root._artThemed} playing=${Media.playing}`;
         }
     }
 }

@@ -6,6 +6,7 @@ import Quickshell.Wayland
 import Quickshell.Hyprland
 import qs.services
 import qs.widgets
+import "desk"
 
 // Wallpaper layer: zoom/blur crossfade between wallpapers, workspace parallax,
 // a big morphing desktop clock and a now-playing card (animated only while the desktop is visible).
@@ -19,6 +20,8 @@ Variants {
         WlrLayershell.layer: WlrLayer.Background
         WlrLayershell.namespace: "maxi-bg"
         WlrLayershell.exclusionMode: ExclusionMode.Ignore
+        // notes / to-do widgets need typing: take keyboard focus only when clicked
+        WlrLayershell.keyboardFocus: Widgets.wantsKeyboard ? WlrKeyboardFocus.OnDemand : WlrKeyboardFocus.None
         anchors { top: true; bottom: true; left: true; right: true }
         color: Theme.surface
 
@@ -162,14 +165,8 @@ Variants {
             }
         }
 
-        // ── now playing card (bottom-right): art + vinyl, progress, synced lyrics ──
-        NowPlaying {
-            live: win.live
-            anchors.right: parent.right
-            anchors.bottom: parent.bottom
-            anchors.rightMargin: 60
-            anchors.bottomMargin: 60
-        }
+        // ── customizable desktop widgets (right-click the desktop to edit) ──
+        DesktopWidgets { live: win.live }
 
         // ── desktop clock: digital <-> analog morph (click it / Super+F10 / >clock) ──
         DesktopClock {

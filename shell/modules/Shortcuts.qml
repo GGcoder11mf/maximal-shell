@@ -25,6 +25,7 @@ Scope {
     }
     Sc { name: "switcher"; description: "Window switcher (next)"; onPressed: Shell.switcherStep(1) }
     Sc { name: "switcherPrev"; description: "Window switcher (previous)"; onPressed: Shell.switcherStep(-1) }
+    Sc { name: "widgets"; description: "Edit desktop widgets"; onPressed: Widgets.editMode = !Widgets.editMode }
     Sc { name: "stage"; description: "Music Stage"; onPressed: Shell.toggle("stage") }
     Sc {
         name: "clock"; description: "Desktop clock: digital <-> analog"
