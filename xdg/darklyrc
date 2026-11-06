@@ -1,0 +1,29 @@
+# Darkly (Qt widget style) for the maximal rice. Found via XDG_CONFIG_DIRS,
+# so it only applies while ~/.config/darklyrc doesn't exist (Caelestia untouched).
+[Style]
+AnimationsEnabled=true
+AnimationsDuration=260
+CornerRadius=14
+MenuOpacity=78
+MenuBarOpacity=60
+ToolBarOpacity=60
+TabBarOpacity=65
+DolphinSidebarOpacity=45
+DolphinViewOpacity=72
+TransparentDolphinView=true
+DisableDolphinUrlNavigatorBackground=false
+TabDrawHighlight=true
+TabUseHighlightColor=true
+RoundedRubberBandFrame=true
+ScrollBarTransient=true
+MenuItemDrawStrongFocus=true
+ViewDrawFocusIndicator=true
+SidePanelDrawFrame=false
+DockWidgetDrawFrame=false
+WidgetDrawShadow=true
+ProgressBarAnimated=true
+ShowIconsInMenuItems=true
+
+[Common]
+ShadowSize=ShadowLarge
+ShadowStrength=170

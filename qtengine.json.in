@@ -1,0 +1,14 @@
+{
+    "theme": {
+        "colorScheme": "@R@/generated/maximal.colors",
+        "iconTheme": "Papirus-Dark",
+        "style": "Darkly",
+        "font": { "family": "Rubik", "size": 11, "weight": -1 },
+        "fontFixed": { "family": "JetBrainsMono Nerd Font", "size": 11, "weight": -1 }
+    },
+    "misc": {
+        "menusHaveIcons": true,
+        "singleClickActivate": false,
+        "shortcutsForContextMenus": true
+    }
+}

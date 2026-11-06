@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+# rice <name>          — switch rice for THIS session (back to the default at next login)
+# rice default [name]  — show / set the rice loaded at login
+# rice                 — show current + default rice
+# Rices live in ~/.config/hypr/rices/<name>/ ; "caelestia" = original setup.
+flag="${XDG_RUNTIME_DIR:-/tmp}/hypr-rice"
+rices="$HOME/.config/hypr/rices"
+deffile="$rices/default"
+def="$(cat "$deffile" 2>/dev/null)"; def="${def:-caelestia}"
+cur="$(cat "$flag" 2>/dev/null)"; cur="${cur:-$def}"
+list() { echo "caelestia $(find "$rices" -mindepth 2 -maxdepth 2 -name init.lua -printf '%h\n' | xargs -n1 basename | tr '\n' ' ')"; }
+
+[ -z "$1" ] && { echo "current: $cur"; echo "default: $def (at login)"; echo "available: $(list)"; exit 0; }
+
+if [ "$1" = default ]; then
+    [ -z "$2" ] && { echo "default: $def"; exit 0; }
+    [ "$2" = caelestia ] || [ -f "$rices/$2/init.lua" ] || { echo "no such rice: $2" >&2; exit 1; }
+    echo "$2" > "$deffile"
+    echo "default at login: $2  (current session unchanged — use 'rice $2' to switch now)"
+    exit 0
+fi
+
+# Point Qt apps back at the default qtengine config (the maximal rice overrides it)
+reset_qt() { hyprctl eval "hl.env('QTENGINE_CONFIG', os.getenv('HOME') .. '/.config/qtengine/config.json'); hl.env('XDG_CONFIG_DIRS', '/etc/xdg')" >/dev/null 2>&1; }
+
+stop_all() {
+    pkill -f "waybar -c $rices/" ; pkill -x mako ; pkill -x swaybg
+    pkill -f "hypridle -c $rices/"
+    for d in "$rices"/*/shell; do [ -d "$d" ] && qs -p "$d" kill >/dev/null 2>&1; done
+    qs -c caelestia kill >/dev/null 2>&1
+    sleep 0.4
+}
+
+case "$1" in
+    caelestia)
+        echo caelestia > "$flag"      # explicit, so the (non-Caelestia) default doesn't take over on reload
+        stop_all
+        hyprctl reload >/dev/null
+        reset_qt
+        sleep 0.3
+        caelestia shell -d >/dev/null 2>&1 &
+        disown
+        echo "switched to caelestia" ;;
+    *)
+        [ -f "$rices/$1/init.lua" ] || { echo "no such rice: $1" >&2; exit 1; }
+        stop_all
+        echo "$1" > "$flag"
+        hyprctl reload >/dev/null
+        [ "$1" = maximal ] || reset_qt
+        "$rices/$1/scripts/start.sh"
+        echo "switched to $1 (this session; default at login: $def)" ;;
+esac

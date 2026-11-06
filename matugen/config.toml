@@ -1,0 +1,33 @@
+# Wallpaper -> palette pipeline. Run through scripts/wallpaper.sh (it fills in the paths).
+[config.custom_colors]
+red     = { color = "#ff3d6e", blend = true }
+green   = { color = "#3dff9e", blend = true }
+yellow  = { color = "#ffd23d", blend = true }
+blue    = { color = "#3d8bff", blend = true }
+magenta = { color = "#d63dff", blend = true }
+cyan    = { color = "#3dfff2", blend = true }
+orange  = { color = "#ff8a3d", blend = true }
+
+[templates.shell]
+input_path  = "@R@/matugen/templates/colors.json"
+output_path = "@R@/generated/colors.json"
+
+[templates.hypr]
+input_path  = "@R@/matugen/templates/colors.lua"
+output_path = "@R@/generated/colors.lua"
+
+[templates.foot]
+input_path  = "@R@/matugen/templates/foot.ini"
+output_path = "@R@/generated/foot.ini"
+
+[templates.fuzzel]
+input_path  = "@R@/matugen/templates/fuzzel.ini"
+output_path = "@R@/generated/fuzzel.ini"
+
+[templates.hyprlock]
+input_path  = "@R@/matugen/templates/hyprlock-colors.conf"
+output_path = "@R@/generated/hyprlock-colors.conf"
+
+[templates.kde]
+input_path  = "@R@/matugen/templates/kde.colors"
+output_path = "@R@/generated/maximal.colors"
