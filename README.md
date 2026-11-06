@@ -1,5 +1,7 @@
 # Maximal Shell
 
+> *README written by Claude, while the real code is written and debugged by me — sorry, I'm a lazy bum (;>)*
+
 ![Maximal Shell desktop](assets/desktop-digital.webp)
 
 A maximalist, music-focused **Hyprland** rice with a fully custom **Quickshell** desktop shell —
