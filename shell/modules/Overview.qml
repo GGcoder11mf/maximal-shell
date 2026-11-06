@@ -143,7 +143,7 @@ Overlay {
                                     IconImage {
                                         anchors.centerIn: parent
                                         implicitSize: Math.min(36, parent.height * 0.4)
-                                        source: Quickshell.iconPath(DesktopEntries.heuristicLookup(w.ipc?.class ?? "")?.icon ?? (w.ipc?.class ?? "").toLowerCase(), "application-x-executable")
+                                        source: Apps.icon(Apps.classOf(w.modelData), "application-x-executable")
                                         opacity: wma.containsMouse ? 1 : 0.85
                                     }
                                 }

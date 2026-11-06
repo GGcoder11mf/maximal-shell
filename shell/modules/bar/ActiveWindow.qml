@@ -2,6 +2,7 @@ import QtQuick
 import Quickshell
 import Quickshell.Widgets
 import Quickshell.Hyprland
+import Quickshell.Wayland
 import qs.services
 import qs.widgets
 
@@ -9,9 +10,12 @@ import qs.widgets
 Item {
     id: root
     property real maxWidth: 400
+    // Wayland's toplevel manager knows the active window immediately and stays live;
+    // Hyprland.activeToplevel is only filled in by the *next* focus event (empty after a restart).
+    readonly property var wl: ToplevelManager.activeToplevel
     readonly property var toplevel: Hyprland.activeToplevel
-    readonly property string cls: toplevel?.lastIpcObject?.class ?? ""
-    readonly property string title: toplevel?.title ?? ""
+    readonly property string cls: wl?.appId || Apps.classOf(toplevel)
+    readonly property string title: wl?.title || toplevel?.title || ""
     readonly property bool has: title !== "" && (Hyprland.focusedWorkspace?.toplevels?.values?.length ?? 0) > 0
 
     width: Math.min(maxWidth, content.implicitWidth)
@@ -30,13 +34,13 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
             implicitSize: 20
             visible: root.has
-            source: Quickshell.iconPath(DesktopEntries.heuristicLookup(root.cls)?.icon ?? root.cls.toLowerCase(), "application-x-executable")
+            source: Apps.icon(root.cls, "application-x-executable")
         }
         Column {
             anchors.verticalCenter: parent.verticalCenter
             Txt {
                 id: clsTxt
-                text: root.has ? (DesktopEntries.heuristicLookup(root.cls)?.name ?? root.cls) : "Desktop"
+                text: root.has ? (Apps.name(root.cls) || root.title) : "Desktop"
                 font.pixelSize: 10
                 font.weight: Font.Bold
                 font.letterSpacing: 1.5

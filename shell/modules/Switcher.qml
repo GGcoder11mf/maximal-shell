@@ -133,7 +133,7 @@ Overlay {
                                 spacing: 8
                                 IconImage {
                                     implicitSize: 22
-                                    source: Quickshell.iconPath(DesktopEntries.heuristicLookup(card.ipc?.class ?? "")?.icon ?? (card.ipc?.class ?? "").toLowerCase(), "application-x-executable")
+                                    source: Apps.icon(Apps.classOf(card.modelData), "application-x-executable")
                                 }
                                 Txt {
                                     Layout.fillWidth: true

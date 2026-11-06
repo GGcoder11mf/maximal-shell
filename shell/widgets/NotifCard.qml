@@ -64,7 +64,7 @@ Glass {
                     const e = root.entry;
                     if (!e) return "";
                     if (e.appIcon) return e.appIcon.startsWith("/") || e.appIcon.includes("://") ? e.appIcon : Quickshell.iconPath(e.appIcon, "dialog-information");
-                    return Quickshell.iconPath(DesktopEntries.heuristicLookup(e.appName)?.icon ?? "dialog-information", "dialog-information");
+                    return Apps.icon(e.desktopEntry || e.appName, "dialog-information");
                 }
             }
             Txt {

@@ -28,7 +28,7 @@ Overlay {
     function appIcon(n) {
         const p = n?.properties ?? {};
         const id = p["application.icon-name"] || p["application.process.binary"] || appName(n).toLowerCase();
-        return Quickshell.iconPath(DesktopEntries.heuristicLookup(id)?.icon ?? id, "audio-x-generic");
+        return Apps.icon(id, "audio-x-generic");
     }
 
     // ── the dropdown ─────────────────────────────────────
